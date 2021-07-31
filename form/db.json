@@ -1,0 +1,7 @@
+{
+    "data":{
+        "stockTypes":["stock1", "stock2", "stock3"],
+        "ports": ["port1", "port2", "port3"],
+        "vessel": ["Delhi", "Mumbai", "Kolkata"]
+    }
+}

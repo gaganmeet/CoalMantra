@@ -10,6 +10,7 @@ const schema = yup.object().shape({
   StockType: yup.string().required().typeError("required field"),
   DealDate: yup
     .date()
+    .default(null)
     .required()
     .min(
       new Date(new Date().setDate(new Date().getDate() - 1)),
@@ -19,25 +20,12 @@ const schema = yup.object().shape({
   // yup StartDate schema depend on DealDate
   StartDate: yup
     .date()
-    .required()
+    .default(null)
     .when(
       "DealDate",
-      (DealDate, schema) =>
-        DealDate &&
-        schema.min(DealDate, "Enter Deal date or later date").required(),
-      "Enter Current date or later date"
+      (DealDate, yup) =>
+        DealDate && yup.min(DealDate, "Enter Start date later than Deal Date")
     ),
-  LiftingDate: yup
-    .date()
-    .required()
-    .when(
-      "StartDate",
-      (StartDate, schema) =>
-        StartDate &&
-        schema.min(StartDate, "Enter Deal date or later date").required(),
-      "Enter Current date or later date"
-    ),
-
   Port: yup.array().of(yup.object()).required().typeError("required field"),
   Vessel: yup.string().required().typeError("required field"),
   Lifting: yup

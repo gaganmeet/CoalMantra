@@ -8,3 +8,10 @@ vessel (dropdown)
 chat button
 meister task
 
+deal date <= start date 
+start date <= lifting date
+
+Solve date validation
+Code review and refactor
+divide in components 
+Keep yup schema separate

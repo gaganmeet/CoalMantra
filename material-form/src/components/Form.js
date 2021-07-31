@@ -1,5 +1,5 @@
-import { makeStyles } from "@material-ui/core";
 import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -7,10 +7,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
 }));
+
 export const Form = ({ children, ...props }) => {
-  const styles = useStyles();
+    const styles = useStyles();
+    
+    
+
   return (
-    <form className={styles.root} noValidate {...props}>
+    <form {...props} className={styles.root} noValidate>
       {children}
     </form>
   );

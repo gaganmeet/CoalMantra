@@ -1,6 +1,7 @@
 import React from "react";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -11,16 +12,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const MainContainer = ({ children, ...props }) => {
-  const styles = useStyles();
+const MainContainer = ({ children, ...props }) => {
   return (
-    <Container
-      {...props}
-      className={styles.root}
-      component="main"
-      maxWidth="xs"
-    >
-      {children}
-    </Container>
+    <>
+      <CssBaseline />
+      <Container className={useStyles.root} maxWidth="sm" {...props}>
+        {children}
+      </Container>
+    </>
   );
 };
+
+export default MainContainer;

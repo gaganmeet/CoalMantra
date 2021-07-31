@@ -1,12 +1,9 @@
-import React from "react";
-import { FinalForm } from "./FinalForm";
+import "./App.css";
 
-const App = () => {
-  return (
-    <>
-      <FinalForm />
-    </>
-  );
-};
+import FinalForm from "./FinalForm";
+
+function App() {
+  return <FinalForm />;
+}
 
 export default App;

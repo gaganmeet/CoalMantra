@@ -1,0 +1,10 @@
+type of stock (dropdown)
+Port (dropdown with checkbox)
+Purchase Date (default current date)
+Lifting - Number of days (integer) (convert to date) date field (fill automatically)
+Start date (date field) should be blank add current date button to add current date
+vessel (dropdown)
+
+chat button
+meister task
+

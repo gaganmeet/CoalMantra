@@ -9,9 +9,11 @@ import { Form } from "./components/Form";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
+import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import * as yup from "yup";
 import FormContainer from "./components/MainContainer";
+import { CssBaseline } from "@material-ui/core";
 
 const schema = yup.object().shape({
   StockType: yup.string().required().typeError("required field"),
@@ -67,8 +69,8 @@ const initialValues = {
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
+    margin: theme.spacing(2),
+    minWidth: 500,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -91,6 +93,7 @@ const FinalForm = () => {
       .then((response) => response.json())
       .then((data) => {
         setStockTypes(data.stockTypes);
+        console.log(data);
         setVessels(data.vessel);
         const dports = data.ports.map((port) => ({
           value: port,
@@ -125,38 +128,51 @@ const FinalForm = () => {
     }
   }, [formData, isSubmitSuccessful, reset]);
 
+  const getStockOptions = () => {
+    let obj = stockTypes.map((stockType) => ({
+      value: stockType,
+      label: stockType,
+    }));
+    console.log(obj);
+    return obj;
+  };
+
   return (
-    <FormContainer>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl required className={classes.formControl}>
-          <InputLabel htmlFor="age-native-required">Age</InputLabel>
-          <Controller
-            name="stockType"
-            label="Stock Type"
-            type="select"
-            error={!!errors.lastName}
-            helperText={errors?.lastName?.message}
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Select
-                native
-                name="age"
-                inputProps={{
-                  id: "age-native-required",
-                }}
-              >
-                <option aria-label="None" value="" />
-                <option value={10}>Ten</option>
-                <option value={20}>Twenty</option>
-                <option value={30}>Thirty</option>
-              </Select>
-            )}
-          />
-          <FormHelperText>Required</FormHelperText>
-        </FormControl>
-      </Form>
-    </FormContainer>
+    <>
+      <CssBaseline />
+      <FormContainer>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <FormControl
+            variant="outlined"
+            required
+            className={classes.formControl}
+          >
+            <InputLabel htmlFor="age-native-required">Stock Type</InputLabel>
+            <Controller
+              name="stockType"
+              label="Stock Type"
+              type="select"
+              error={!!errors.stockType}
+              helperText={errors?.stockType?.message}
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <Select name="stockType" displayEmpty {...field}>
+                  {stockTypes &&
+                    stockTypes.map((stockType) => (
+                      <MenuItem key={stockType} value={stockType}>
+                        {stockType}
+                      </MenuItem>
+                    ))}
+                </Select>
+              )}
+            />
+            
+            <FormHelperText>Required</FormHelperText>
+          </FormControl>
+        </Form>
+      </FormContainer>
+    </>
   );
 };
 

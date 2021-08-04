@@ -5,6 +5,7 @@
 }
 .form {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
@@ -29,12 +30,10 @@
 .start-date {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%;
+  align-items: flex-end;
 }
 
 .start-date-in {
-  width: 30%;
   margin-bottom: 2%;
 }
 
@@ -47,15 +46,19 @@
 }
 
 .submit-btn {
-  background-color: rgb(48, 102, 202);
+  padding: 15px 150px;
+  background: rgb(48, 102, 202);
   color: #fafafa;
+  font-size: large;
   border: 1px solid rgb(75, 70, 70);
-  border-radius: 1em;
-  padding: 10px 120px;
-  margin-bottom: 2%;
+  border-radius: 0.25em;
 }
 .start-date-btn:hover,
 .submit-btn:hover {
   cursor: pointer;
   background-color: rgb(32, 32, 131);
+}
+label,
+option {
+  font-weight: bold;
 }

@@ -2,53 +2,21 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import "./Form.css";
-
+import { ValidationSchema } from "./ValidationSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import { errorStyle, labelStyle, divStyle } from "./styles";
+import { nanoid } from "nanoid";
+import Activity from "../activity/Activity";
 
-const schema = yup.object().shape({
-  StockType: yup.string().required().typeError("required field"),
-  DealDate: yup
-    .date()
-    .default(null)
-    .required()
-    .min(
-      new Date(new Date().setDate(new Date().getDate() - 1)),
-      "Enter Current date or later date"
-    )
-    .typeError("required field"),
-  // yup StartDate schema depend on DealDate
-  StartDate: yup
-    .date()
-    .default(null)
-    .when(
-      "DealDate",
-      (DealDate, yup) =>
-        DealDate && yup.min(DealDate, "Enter Start date later than Deal Date")
-    ),
-  Port: yup.array().of(yup.object()).required().typeError("required field"),
-  Vessel: yup.string().required().typeError("required field"),
-  Lifting: yup
-    .number()
-    .required()
-    .positive()
-    .integer()
-    .typeError("required field"),
-});
 
-const errorStyle = {
-  color: "red",
-};
+const Form = ({ id, formData, setFormData }) => {
+  // form state
 
-const labelStyle = "ma2";
-const divStyle = "flex flex-column justify-center items-center";
-
-const Form = () => {
-  // Initialize the form
-  const [formData, setFormData] = React.useState();
   const [stockTypes, setStockTypes] = React.useState([]);
   const [vessels, setVessels] = React.useState([]);
   const [ports, setPorts] = React.useState([]);
+
+  // fetch data for the form and set state
   React.useEffect(() => {
     fetch("http://localhost:5000/data", {
       headers: {
@@ -66,6 +34,7 @@ const Form = () => {
         }));
         setPorts(dports);
       });
+    console.log(id);
   }, []);
   const newDate = new Date();
   const date = newDate.toISOString().substring(0, 10);
@@ -78,21 +47,40 @@ const Form = () => {
     reset,
     getValues,
   } = useForm({
-    defaultValues: {
-      DealDate: date,
-    },
-    resolver: yupResolver(schema),
+    defaultValues: { formData },
+    resolver: yupResolver(ValidationSchema),
   });
   const onSubmit = (values) => {
-    console.log(values);
-    //setFormData(values);
+    let newData = formData;
+    const fid = () => {
+      if (id) {
+        newData = newData.filter((form) => {
+          return form._id !== id;
+        });
+        console.log(id);
+        return id;
+      }
+      return nanoid();
+    };
+    const user = "Gaganmeet Bahri";
+    const _id = fid();
+    values = { _id, user, ...values };
+    // add values to formData
+    setFormData([...newData, values]);
+    console.log(formData);
   };
   React.useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset({ ...formData, Port: [] });
+    if (localStorage.getItem("formData")) {
+      const data = JSON.parse(localStorage.getItem("formData"));
+      setFormData(data);
     }
-  }, [formData, isSubmitSuccessful, reset]);
+  }, []);
 
+  React.useEffect(() => {
+    localStorage.setItem("formData", JSON.stringify(formData));
+  }, [formData]);
+
+  // render form
   return (
     <div className="container">
       <form className="form" onSubmit={handleSubmit(onSubmit)}>
@@ -160,16 +148,14 @@ const Form = () => {
               <p style={errorStyle}>{errors.StartDate.message}</p>
             )}
           </div>
-          <div className={divStyle}>
-            <input
-              type="button"
-              className="date-btn start-date-btn"
-              onClick={() =>
-                setValue("StartDate", newDate.toISOString().substring(0, 10))
-              }
-              value="Current Date"
-            />
-          </div>
+          <input
+            type="button"
+            className="date-btn start-date-btn"
+            onClick={() =>
+              setValue("StartDate", newDate.toISOString().substring(0, 10))
+            }
+            value="Current Date"
+          />
         </div>
         <div className="start-date">
           <div className={divStyle}>
@@ -248,39 +234,10 @@ const Form = () => {
           </select>
           {errors.Vessel && <p style={errorStyle}>{errors.Vessel.message}</p>}
         </div>
-        <input className="submit-btn" type="submit" />
+        <input className="submit-btn mt3" type="submit" />
       </form>
     </div>
   );
 };
 
 export default Form;
-
-/*
-.when(
-      "StartDate",
-
-      (startDate, schema) =>
-        startDate &&
-        schema.min(startDate, "Enter Start date or later date").required(),
-      "Enter Current date or later date"
-    )
-    */
-
-/*
-    .when(
-      "DealDate",
-      (DealDate, schema) =>
-        DealDate &&
-        schema.min(DealDate, "Enter Deal date or later date").required(),
-      "Enter Current date or later date"
-    )
-
-    .when(
-      "StartDate",
-      (startDate, schema) =>
-        startDate &&
-        schema.min(startDate, "Enter Start date or later date").required(),
-      "Enter Current date or later date"
-    )
-    */
